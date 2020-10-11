@@ -1,0 +1,74 @@
+(pylspclient) [slzatz@slzatz-archbox examples]$ python clangd.py 
+sending: {"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {"processId": 6536, "rootPath": null, "rootUri": "file:///home/slzatz/pylspclient/examples/", "initializationOptions": null, "capabilities": {"textDocument": {"codeAction": {"dynamicRegistration": true}, "codeLens": {"dynamicRegistration": true}, " colorProvider": {"dynamicRegistration": true}, "completion": {"completionItem": {"commitCharactersSupport": true, "documentationFormat": ["markdown", "plaintext"], "snippetSupport": true}, "completionItemKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]}, " contextSupport": true, "dynamicRegistration": true}, "definition": {"dynamicRegistration": true}, "documentHighlight": {"dynamicRegistration": true}, "documentLink": {"dynamicRegistration": true}, "documentSymbol": {"dynamicRegistration": true, "symbolKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]}}, "formatting": {"dynamicRegistration": true}, "hover": {"contentFormat": ["markdown", "plaintext"], "dynamicRegistration": true}, "implementation": {"dynamicRegistration": true}, "onTypeFormatting": {"dynamicRegistration": true}, "publishDiagnostics": {"relatedInforma tion": true}, "rangeFormatting": {"dynamicRegistration": true}, "references": {"dynamicRegistration": true}, "rename": {"dynamicRegistration": true}, "signatureHelp": {"dynamicRegistration": true, "signatureInformation": {"documentationFormat": ["markdown", "plaintext"]}}, "synchronization": {"didSave": true, "dynamicRegistration": true, "willSave": true, "willSaveWaitUntil": true}, "typeDefinition": {"dynamicRegistration": true}}, "workspace": {"applyEdit": true, "configuration": true, "didChangeConfiguration": {"dynamicRegistration": true}, "didChangeWatchedFiles": {"dynamicRegistration": true}, "executeCommand": {"dynamicRegistration": true}, "symbol": {"dynamicRegistration": true, "symbolKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]}}, "workspaceEdit": {"documentChanges": true}, "workspaceFolders": true}}, "trace": "off", "workspaceFolders": [{"name": "python-lsp", "uri"
+: "file:///home/slzatz/pylspclient/examples/"}]}}
+I[19:35:51.531] clangd version 10.0.1 
+
+I[19:35:51.531] PID: 6536
+
+I[19:35:51.531] Working directory: /home/slzatz/pylspclient/examples
+
+I[19:35:51.531] argv[0]: /usr/bin/clangd
+
+I[19:35:51.531] Starting LSP over stdin/stdout
+
+I[19:35:51.531] <-- initialize(0)
+
+I[19:35:51.532] --> reply:initialize(0) 0 ms
+
+b'Content-Length: 803\r\n'
+recieved message: {'id': 0, 'jsonrpc': '2.0', 'result': {'capabilities': {'codeActionProvider': True, 'completionProvider': {'resolveProvider': False, 'triggerCharacters': ['.', '>', ':']}, 'declarationProvider': True, 'definitionProvider': True, 'documentFormattingProvider': True, 'documentHighlightProvider': True, 'documentLinkProvider': {'resolveProvider': False}, 'documentOnTypeFormattingProvider': {'firstTriggerCharacter': '\n', 'moreTriggerCharacter': []}, 'documentRangeFormattingProvider': True, 'documentSymbolProvider': True, 'executeCommandProvider': {'commands': ['clangd.applyFix', 'clangd.applyTweak']}, 'hoverProvider': True, 'referencesProvider': True, 'renameProvider': True, 'selectionRangeProvider': True, 'signatureHelpProvider': {'triggerCharacters': ['(', ',']}, 'textDocumentSync': 2, 'typeHierarchyProvider': True, 'workspaceSymbolProvider': True}}}
+{'id': 0, 'jsonrpc': '2.0', 'result': {'capabilities': {'codeActionProvider': True, 'completionProvider': {'resolveProvider': False, 'triggerCharacters': ['.', '>', ':']}, 'declarationProvider': True, 'definitionProvider': True, 'documentFormattingProvider': True, 'documentHighlightProvider': True, 'documentLinkProvider': {'resolveProvider': False}, 'documentOnTypeFormattingProvider': {'firstTriggerCharacter': '\n', 'moreTriggerCharacter': []}, 'documentRangeFormattingProvider': True, 'documentSymbolProvider': True, 'executeCommandProvider': {'commands': ['clangd.applyFix', 'clangd.applyTweak']}, 'hoverProvider': True, 'references Provider': True, 'renameProvider': True, 'selectionRangeProvider': True, 'signatureHelpProvider': {'triggerCharacters': ['(', ',']}, 'textDocumentSync': 2, 'typeHierarchyProvider': True, 'workspaceSymbolProvider': True}}}
+{'capabilities': {'codeActionProvider': True, 'completionProvider': {'resolveProvider': False, 'triggerCharacters': ['.', '>', ':']}, 'declarationProvider': True, 'definitionProvider': True, 'documentFormattingProvider': True, 'documentHighlightProvider': True, 'documentLinkProvider': {'resolveProvider': False}, 'documentOnTypeFormattingProvider': {'firstTriggerCharacter': '\n', 'moreTriggerCharacter': []}, 'documentRangeFormattingProvider': True, 'documentSymbolProvider': True, 'executeCommandProvider': {'commands': ['clangd.applyFix', 'clangd.applyTweak']}, 'hoverProvider': True, 'referencesProvider': True, 'renameProvider': True, 'selectionRangeProvider': True, 'signatureHelpProvider': {'triggerCharacters': ['(', ',']}, 'textDocumentSync': 2, 'typeHierarchyProvider': True, 'workspaceSymbolProvider': True}} sending: {"jsonrpc": "2.0", "method": "initialized", "params": {}}
+
+None
+
+I[19:35:51.532] <-- initialized
+
+I[19:35:51.532] unhandled notification initialized
+
+sending: {"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": {"textDocument": {"uri": "file:///home/slzatz/pylspclient/examples/test.cpp", "languageId": "cpp", "version": 1, "text": "#include <iostream>\n#include <string>\n#include <vector>\n\nint main() {\nstd::vector<int> v{1,2,3,4};\nstd::string s{\"Hello World\"}\n\nstd::cout << s << std::endl;\nstd::cout << v.at(2) << std::endl;\nreturn 0;\n\n}\n"}}}
+
+###documentSymbol:
+sending: {"jsonrpc": "2.0", "id": 1, "method": "textDocument/documentSymbol", "params": {"textDocument": {"uri": "file:///home/slzatz/pylspclient/examples/test.cpp"}}}
+I[19:35:51.532] <-- textDocument/didOpen
+
+I[19:35:51.533] <-- textDocument/documentSymbol(1)
+
+I[19:35:51.533] Failed to find compilation database for /home/slzatz/pylspclient/examples/test.cpp
+
+I[19:35:51.533] Updating file /home/slzatz/pylspclient/examples/test.cpp with command clangd fallback
+
+[/home/slzatz/pylspclient/examples]
+
+/usr/bin/clang /home/slzatz/pylspclient/examples/test.cpp -fsyntax-only -resource-dir=/usr/lib/clang/10.0.1
+
+b'Content-Length: 373\r\n'
+I[19:35:51.894] --> textDocument/publishDiagnostics
+
+I[19:35:51.894] --> reply:textDocument/documentSymbol(1) 361 ms
+
+recieved message:
+{'jsonrpc': '2.0', 'method': 'textDocument/publishDiagnostics', 'params': {'diagnostics': [{'code': 'expected_semi_declaration', 'message': "Expected ';' at end of declaration (fix available)", 'range': {'end': {'character': 3, 'line': 8}, 'start': {'character': 0, 'line': 8}}, 'relatedInformation': [], 'severity': 1, 'source': 'clang'}], 'uri': 'file:///home/slzatz/pylspclient/examples/test.cpp'}}
+
+{'jsonrpc': '2.0', 'method': 'textDocument/publishDiagnostics', 'params': {'diagnostics': [{'code': 'expected_semi_declaration', 'message': "Expected ';' at end of declaration (fix available)", 'range': {'end': {'character': 3, 'line': 8}, 'start': {'character': 0, 'line': 8}}, 'relatedInformation': [], 'severity': 1, 'source': 'clang'}], 'uri': 'file:///home/slzatz/pylspclient/examples/test.cpp'}}
+
+{'jsonrpc': '2.0', 'method': 'textDocument/publishDiagnostics', 'params': {'diagnostics': [{'code': 'expected_semi_declaration', 'message': "Expected ';' at end of declaration (fix available)", 'range': {'end': {'character': 3, 'line': 8}, 'start': {'character': 0, 'line': 8}}, 'relatedInformation': [], 'severity': 1, 'source': 'clang'}], 'uri': 'file:///home/slzatz/pylspclient/examples/test.cpp'}}
+
+b'Content-Length: 226\r\n'
+recieved message: {'id': 1, 'jsonrpc': '2.0', 'result': [{'containerName': '', 'kind': 12, 'location': {'range': {'end': {'character': 0, 'line': 12}, 'start': {'character': 0, 'line': 4}}, 'uri': 'file:///home/slzatz/pylspclient/examples/test.cpp'}, 'name': 'main'}]}
+{'id': 1, 'jsonrpc': '2.0', 'result': [{'containerName': '', 'kind': 12, 'location': {'range': {'end': {'character': 0, 'line': 12}, 'start': {'character': 0, 'line': 4}}, 'uri': 'file:///home/slzatz/pylspclient/examples/test.cpp'}, 'name': 'main'}]}
+
+main
+
+sending: {"jsonrpc": "2.0", "id": 2, "method": "shutdown", "params": {}}
+I[19:35:51.894] <-- shutdown(2)
+
+I[19:35:51.894] --> reply:shutdown(2) 0 ms
+
+b'Content-Length: 38\r\n'
+recieved message: {'id': 2, 'jsonrpc': '2.0', 'result': None}
+{'id': 2, 'jsonrpc': '2.0', 'result': None}
+sending: {"jsonrpc": "2.0", "method": "exit", "params": {}}
+I[19:35:51.895] <-- exit
+
+I[19:35:51.895] LSP finished, exiting with status 0
