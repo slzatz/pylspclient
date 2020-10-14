@@ -60,7 +60,7 @@ class LspEndpoint(threading.Thread):
                                 print(f"Diagnostic message: {params.get('diagnostics')[0].get('message')}\n")
                                 start = params.get("diagnostics")[0].get("range").get("start")
                                 print(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}\n")
-                                self.socket.send("hello", f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}")
+                                self.socket.send(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}")
                             else:
                                 print("There were no errors\n")
                         if method not in self.notify_callbacks:
