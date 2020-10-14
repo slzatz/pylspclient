@@ -1,7 +1,7 @@
 from __future__ import print_function
 import threading
 import collections
-from pylspclient2 import lsp_structs
+from pylspclient import lsp_structs
 import zmq ############################################
 
 class LspEndpoint(threading.Thread):
