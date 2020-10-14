@@ -16,8 +16,8 @@ class LspEndpoint(threading.Thread):
         self.shutdown_flag = False
         #######################
         context = zmq.Context()
-        socket = context.socket(zmq.PUB)
-        socket.bind("tcp://*:5557")
+        self.socket = context.socket(zmq.PUB)
+        self.socket.bind("tcp://*:5557")
         ##########################
 
     def handle_result(self, rpc_id, result, error):
@@ -60,7 +60,7 @@ class LspEndpoint(threading.Thread):
                                 print(f"Diagnostic message: {params.get('diagnostics')[0].get('message')}\n")
                                 start = params.get("diagnostics")[0].get("range").get("start")
                                 print(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}\n")
-                                socket.send("hello", f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}")
+                                self.socket.send("hello", f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}")
                             else:
                                 print("There were no errors\n")
                         if method not in self.notify_callbacks:
