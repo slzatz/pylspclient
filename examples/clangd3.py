@@ -1,7 +1,11 @@
-import pylspclient
+import pylspclient2 as pylspclient
+#import pylspclient
 import subprocess
 import threading
 import argparse
+import time
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 
 # seems only here to handle stderr
 class ReadPipe(threading.Thread):
@@ -36,7 +40,8 @@ if __name__ == "__main__":
     lsp_client = pylspclient.LspClient(lsp_endpoint)
 
 
-    capabilities = {'textDocument': {'codeAction': {'dynamicRegistration': True},
+    capabilities = {'offsetEncoding': ['utf-8'],
+    'textDocument': {'codeAction': {'dynamicRegistration': True},
     'codeLens': {'dynamicRegistration': True},
     'colorProvider': {'dynamicRegistration': True},
     'completion': {'completionItem': {'commitCharactersSupport': True,
@@ -160,23 +165,75 @@ if __name__ == "__main__":
 
     file_path = "/home/slzatz/pylspclient/examples/test.cpp"
     uri = "file://" + file_path
-    text = open(file_path, "r").read()
+    with open(file_path, "r") as f:
+        text = f.read()
+    #text = open(file_path, "r").read()
+    text2 = "#include <iostream>\n#include <string>\n#include <vector>\n\nint main() {\nstd::vector<int> v{1,2,3,4};\nstd::st"\
+            "ring s{\"Hello World\"};\n\nstd::cout << s << std::endl;\nstd::cout << v.at(2) << std::endl;\nreturn 0;\n\n}\n"
     languageId = pylspclient.lsp_structs.LANGUAGE_IDENTIFIER.CPP
     version = 1
+
+    print(dir(lsp_client))
+    #def didOpen(self, textDocument):
     print("\n### client sends didOpen:\n")
     lsp_client.didOpen(pylspclient.lsp_structs.TextDocumentItem(uri, languageId, version, text))
+
+
+    p0 = pylspclient.lsp_structs.Position(6, 27)
+    p1 = pylspclient.lsp_structs.Position(6,28)
+    range_ = pylspclient.lsp_structs.Range(p0, p1)
+
+    # the below works
+    #lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 2),
+    #                         pylspclient.lsp_structs.TextDocumentContentChangeEvent(range_, 1, "};"))
+
+    #textDocument/didChange request: wantDiagnostics : bool -> clangd extension to ensure you get diagnostics
+    lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 3), {"text": text2})
+
+    n = 4
+    def on_modified(event):
+        global n
+        with open(file_path, "r") as f:
+            text = f.read()
+        lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, n), {"text": text})
+        n+=1
+        print(f"Got on_modified event; n={n}")
+
+    patterns = "*"
+    ignore_patterns = ""
+    ignore_directories = True
+    case_sensitive = True
+    my_event_handler = PatternMatchingEventHandler(patterns, ignore_patterns, ignore_directories, case_sensitive)
+    my_event_handler.on_modified = on_modified
+
+    path = "."
+    go_recursively = False
+    my_observer = Observer()
+    my_observer.schedule(my_event_handler, path, recursive=go_recursively)
+
+    my_observer.start()
     try:
-        print("\n### client sends documentSymbol:\n")
-        symbols = lsp_client.documentSymbol(pylspclient.lsp_structs.TextDocumentIdentifier(uri))
-        for symbol in symbols:
-            print(symbol.name)
-    except pylspclient.lsp_structs.ResponseError:
-        # documentSymbol is supported from version 8.
-        print("Failed to document symbols")
+        while True:
+            print("howdy")
+            time.sleep(1)
+    except KeyboardInterrupt:
+        lsp_client.shutdown()
+        lsp_client.exit()
+        my_observer.stop()
+        my_observer.join()
+
+    #try:
+    #    print("\n### client sends documentSymbol:\n")
+    #    symbols = lsp_client.documentSymbol(pylspclient.lsp_structs.TextDocumentIdentifier(uri))
+    #    for symbol in symbols:
+    #        print(symbol.name)
+    #except pylspclient.lsp_structs.ResponseError:
+    #    print("Failed to document symbols")
 
     #lsp_client.definition(pylspclient.lsp_structs.TextDocumentIdentifier(uri), pylspclient.lsp_structs.Position(14, 4))
     #lsp_client.signatureHelp(pylspclient.lsp_structs.TextDocumentIdentifier(uri), pylspclient.lsp_structs.Position(14, 4))
     #lsp_client.definition(pylspclient.lsp_structs.TextDocumentIdentifier(uri), pylspclient.lsp_structs.Position(14, 4))
     #lsp_client.completion(pylspclient.lsp_structs.TextDocumentIdentifier(uri), pylspclient.lsp_structs.Position(14, 4), pylspclient.lsp_structs.CompletionContext(pylspclient.lsp_structs.CompletionTriggerKind.Invoked))
-    lsp_client.shutdown()
-    lsp_client.exit()
+
+    #lsp_client.shutdown()
+    #lsp_client.exit()

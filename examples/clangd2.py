@@ -1,4 +1,5 @@
-import pylspclient
+import pylspclient2 as pylspclient
+#import pylspclient
 import subprocess
 import threading
 import argparse
@@ -36,7 +37,8 @@ if __name__ == "__main__":
     lsp_client = pylspclient.LspClient(lsp_endpoint)
 
 
-    capabilities = {'textDocument': {'codeAction': {'dynamicRegistration': True},
+    capabilities = {'offsetEncoding': ['utf-8'],
+    'textDocument': {'codeAction': {'dynamicRegistration': True},
     'codeLens': {'dynamicRegistration': True},
     'colorProvider': {'dynamicRegistration': True},
     'completion': {'completionItem': {'commitCharactersSupport': True,
@@ -161,10 +163,27 @@ if __name__ == "__main__":
     file_path = "/home/slzatz/pylspclient/examples/test.cpp"
     uri = "file://" + file_path
     text = open(file_path, "r").read()
+    text2 = "#include <iostream>\n#include <string>\n#include <vector>\n\nint main() {\nstd::vector<int> v{1,2,3,4};\nstd::st"\
+            "ring s{\"Hello World\"};\n\nstd::cout << s << std::endl;\nstd::cout << v.at(2) << std::endl;\nreturn 0;\n\n}\n"
     languageId = pylspclient.lsp_structs.LANGUAGE_IDENTIFIER.CPP
     version = 1
+
+    print(dir(lsp_client))
+    #def didOpen(self, textDocument):
     print("\n### client sends didOpen:\n")
     lsp_client.didOpen(pylspclient.lsp_structs.TextDocumentItem(uri, languageId, version, text))
+
+
+    p0 = pylspclient.lsp_structs.Position(6, 27)
+    p1 = pylspclient.lsp_structs.Position(6,28)
+    range_ = pylspclient.lsp_structs.Range(p0, p1)
+
+    # the below works
+    #lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 2),
+    #                         pylspclient.lsp_structs.TextDocumentContentChangeEvent(range_, 1, "};"))
+
+    lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 3), {"text": text2})
+
     try:
         print("\n### client sends documentSymbol:\n")
         symbols = lsp_client.documentSymbol(pylspclient.lsp_structs.TextDocumentIdentifier(uri))

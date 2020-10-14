@@ -1,4 +1,4 @@
-from pylspclient import lsp_structs
+from pylspclient2 import lsp_structs
 
 class LspClient(object):
     def __init__(self, lsp_endpoint):
@@ -96,7 +96,8 @@ class LspClient(object):
             to the document. So if there are two content changes c1 and c2 for a document in state S then c1 move the document 
             to S' and c2 to S''.
         """
-        return self.lsp_endpoint.send_notification("textDocument/didChange", textDocument=textDocument, contentChanges=contentChanges)
+        #return self.lsp_endpoint.send_notification("textDocument/didChange", textDocument=textDocument, contentChanges=contentChanges)
+        return self.lsp_endpoint.send_notification("textDocument/didChange", textDocument=textDocument, contentChanges=[contentChanges])
 
 
     def documentSymbol(self, textDocument):

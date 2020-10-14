@@ -1,8 +1,8 @@
 from __future__ import print_function
 import threading
 import collections
-from pylspclient import lsp_structs
-
+from pylspclient2 import lsp_structs
+import zmq ############################################
 
 class LspEndpoint(threading.Thread):
     def __init__(self, json_rpc_endpoint, method_callbacks={}, notify_callbacks={}):
@@ -14,7 +14,11 @@ class LspEndpoint(threading.Thread):
         self.response_dict = {}
         self.next_id = 0
         self.shutdown_flag = False
-
+        #######################
+        context = zmq.Context()
+        socket = context.socket(zmq.PUB)
+        socket.bind("tcp://*:5557")
+        ##########################
 
     def handle_result(self, rpc_id, result, error):
         self.response_dict[rpc_id] = (result, error)
@@ -35,6 +39,7 @@ class LspEndpoint(threading.Thread):
                 if jsonrpc_message is None:
                     print("server quit")
                     break
+                print("received message:\n", jsonrpc_message)
                 method = jsonrpc_message.get("method")
                 result = jsonrpc_message.get("result")
                 error = jsonrpc_message.get("error")
@@ -45,14 +50,22 @@ class LspEndpoint(threading.Thread):
                     if rpc_id:
                         # a call for method
                         if method not in self.method_callbacks:
-                            raise lsp_structs.ResponseError(lsp_structs.ErrorCodes.MethodNotFound, "Method not found: {method}".format(method=method))
+                            raise lsp_structs.ResponseError(lsp_structs.ErrorCodes.MethodNotFound, "Client->Method not found: {method}".format(method=method))
                         result = self.method_callbacks[method](params)
                         self.send_response(rpc_id, result, None)
                     else:
                         # a call for notify
+                        if method == "textDocument/publishDiagnostics":
+                            if params.get('diagnostics'):
+                                print(f"Diagnostic message: {params.get('diagnostics')[0].get('message')}\n")
+                                start = params.get("diagnostics")[0].get("range").get("start")
+                                print(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}\n")
+                                socket.send("hello", f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}")
+                            else:
+                                print("There were no errors\n")
                         if method not in self.notify_callbacks:
                             # Have nothing to do with this.
-                            print("Notify method not found: {method}.".format(method=method))
+                            print("Client->Notify method not found: {method}.".format(method=method))
                         else:
                             self.notify_callbacks[method](params)
                 else:

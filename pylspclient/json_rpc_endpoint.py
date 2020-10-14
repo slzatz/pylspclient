@@ -1,7 +1,7 @@
 from __future__ import print_function
 import json
 import re
-from pylspclient import lsp_structs
+from pylspclient2 import lsp_structs
 import threading
 
 JSON_RPC_REQ_FORMAT = "Content-Length: {json_string_len}\r\n\r\n{json_string}"
@@ -49,6 +49,7 @@ class JsonRpcEndpoint(object):
         :param dict message: The message to send.            
         '''
         json_string = json.dumps(message, cls=MyEncoder)
+        print("sending:\n", json_string)
         jsonrpc_req = self.__add_header(json_string)
         with self.write_lock:
             self.stdin.write(jsonrpc_req.encode())
@@ -69,6 +70,7 @@ class JsonRpcEndpoint(object):
                 if not line:
                     # server quit
                     return None
+                print(line)
                 line = line.decode("utf-8")
                 if not line.endswith("\r\n"):
                     raise lsp_structs.ResponseError(lsp_structs.ErrorCodes.ParseError, "Bad header: missing newline")
