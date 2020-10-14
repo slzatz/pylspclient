@@ -1,4 +1,4 @@
-import pylspclient2 as pylspclient
+import pylspclient
 #import pylspclient
 import subprocess
 import threading
@@ -167,9 +167,9 @@ if __name__ == "__main__":
     uri = "file://" + file_path
     with open(file_path, "r") as f:
         text = f.read()
-    #text = open(file_path, "r").read()
-    text2 = "#include <iostream>\n#include <string>\n#include <vector>\n\nint main() {\nstd::vector<int> v{1,2,3,4};\nstd::st"\
-            "ring s{\"Hello World\"};\n\nstd::cout << s << std::endl;\nstd::cout << v.at(2) << std::endl;\nreturn 0;\n\n}\n"
+    #text2 = "#include <iostream>\n#include <string>\n#include <vector>\n\nint main() {\nstd::vector<int> v{1,2,3,4};\nstd::st"\
+    #        "ring s{\"Hello World\"};\n\nstd::cout << s << std::endl;\nstd::cout << v.at(2) << std::endl;\nreturn 0;\n\n}\n"
+
     languageId = pylspclient.lsp_structs.LANGUAGE_IDENTIFIER.CPP
     version = 1
 
@@ -179,16 +179,16 @@ if __name__ == "__main__":
     lsp_client.didOpen(pylspclient.lsp_structs.TextDocumentItem(uri, languageId, version, text))
 
 
-    p0 = pylspclient.lsp_structs.Position(6, 27)
-    p1 = pylspclient.lsp_structs.Position(6,28)
-    range_ = pylspclient.lsp_structs.Range(p0, p1)
+    #p0 = pylspclient.lsp_structs.Position(6, 27)
+    #p1 = pylspclient.lsp_structs.Position(6,28)
+    #range_ = pylspclient.lsp_structs.Range(p0, p1)
 
     # the below works
     #lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 2),
     #                         pylspclient.lsp_structs.TextDocumentContentChangeEvent(range_, 1, "};"))
 
     #textDocument/didChange request: wantDiagnostics : bool -> clangd extension to ensure you get diagnostics
-    lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 3), {"text": text2})
+    #lsp_client.didChange(pylspclient.lsp_structs.VersionedTextDocumentIdentifier(uri, 3), {"text": text2})
 
     n = 4
     def on_modified(event):
