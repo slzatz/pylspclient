@@ -36,6 +36,7 @@ class LspEndpoint(threading.Thread):
         while not self.shutdown_flag:
             try:
                 jsonrpc_message = self.json_rpc_endpoint.recv_response()
+                #print(type(jsonrpc_message)) # it's a dict
                 if jsonrpc_message is None:
                     print("server quit")
                     break
@@ -60,7 +61,8 @@ class LspEndpoint(threading.Thread):
                                 print(f"Diagnostic message: {params.get('diagnostics')[0].get('message')}\n")
                                 start = params.get("diagnostics")[0].get("range").get("start")
                                 print(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}\n")
-                                self.socket.send_string(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}")
+                                #self.socket.send_string(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}") #this works
+                                self.socket.send_json(params.get("diagnostics"))
                             else:
                                 print("There were no errors\n")
                         if method not in self.notify_callbacks:
