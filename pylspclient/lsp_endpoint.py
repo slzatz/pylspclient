@@ -57,14 +57,20 @@ class LspEndpoint(threading.Thread):
                     else:
                         # a call for notify
                         if method == "textDocument/publishDiagnostics":
+                            # The if/else below is just debugging and could be removed
                             if params.get('diagnostics'):
                                 print(f"Diagnostic message: {params.get('diagnostics')[0].get('message')}\n")
                                 start = params.get("diagnostics")[0].get("range").get("start")
                                 print(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}\n")
                                 #self.socket.send_string(f"Diagnostic range start: line: {start.get('line')}; char: {start.get('character')}") #this works
-                                self.socket.send_json(params.get("diagnostics"))
+                                #self.socket.send_json(params.get("diagnostics"))
                             else:
                                 print("There were no errors\n")
+                                # could just send params.get("diagnostics") since that is []
+                                #self.socket.send_json([])
+
+                            self.socket.send_json(params.get("diagnostics")) #the main event
+
                         if method not in self.notify_callbacks:
                             # Have nothing to do with this.
                             print("Client->Notify method not found: {method}.".format(method=method))
