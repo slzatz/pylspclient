@@ -1,37 +1,42 @@
 #include <iostream>
 #include <string>
-#include <map>
 #include <vector>
+#include <fmt/core.h>
+#include <nlohmann/json.hpp>
+/* 
 
-/* some common string operations
-should include string_view*/
+push_back
+clear
+insert
+erase
 
-int main()  {
+*/
 
-  std::string s("Bodie is a Good Boy");
-  std::cout << s << std::endl;
-  s.insert(7,"Girl" );
-  std::cout << s << std::endl;
-  s.append("Norm");
-  std::cout << s << std::endl;
-  s.erase(4,8);
-  std::cout << s << std::endl;
-  
-  std::map<int,int> m{{1,2}, {3,4}};
-  
-  //if (m.contains(1)) std::cout << "yes 1" << std::endl;
-  if (m.count(1)) std::cout << "yes 1" << std::endl;
+struct A {
+   std::string s;
+   int x;
+   A(std::string S, int X) : s(S), x(X) {};
+};
 
-  else std::cout << "no 1" << std::endl;
-  //if (m.contains(4)) std::cout << "yes 4" << std::endl;
-  if (m.count(4)) std::cout << "yes 4" << std::endl;
-  else std::cout << "no 4" << std::endl;
+int main() {
+
+  A a0{"hello", 5};
+  A a1{"goodbye", 100};
+  A a2{"norm", 50};
   
-  std::string zz = "helloo";
-  ////
+  std::vector<A> v;
+  v.push_back(a0);
+  v.push_back(a1);
+  v.push_back(a2);
   
-  std::vector<int> v{1,2,3,4};
-  v.pushback(5);
-  
-  return 1;
+  int y = 5;
+
+  int id = 100;
+  //auto it = std::find_if(v.begin(), v.end(), [&id](auto n){return n.x == id;});
+
+  //std::cout << it->s << std::endl;
+  //fmt::print("You selected {}", it->s);
+  fmt::print("Hello {}", "Steve");
+
+return 0;
 }

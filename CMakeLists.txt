@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(ZeroMQ QUIET)
 
+set(BUILD_CPR_TESTS OFF)
+
 if(NOT ZeroMQ_FOUND)
   message(STATUS "CMake libzmq package not found, trying again with pkg-config (normal install of zeromq)")
   list (APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/libzmq-pkg-config)
@@ -34,7 +36,11 @@ FetchContent_Declare(cpr
   #GIT_TAG e627e47727bfa13314dbe43418cf825097a2d38e) # the commit hash for 1.5.0
   #GIT_TAG 5e87cb5f45ac99858f0286dc1c35a6cd27c3bcb9) #1.5.1 - this is what I had been using
   GIT_TAG 9ee57777424c55d655b290fbfc1eb0cc10047d86)
+# trying to check if population has already occurred
+#FetchContent_GetProperties(cpr)
+#if(NOT $cpr_POPULATED)
 FetchContent_MakeAvailable(cpr)
+#endif()
 
 FetchContent_Declare(json
   GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent #tracking repository - smaller download
@@ -50,7 +56,7 @@ set (source_dir "${PROJECT_SOURCE_DIR}/")
 # the below obviously shouldn't be a GLOB since only one source file
 #file (GLOB source_files "${source_dir}/listmanager_term_improved.*")
 
-add_executable(${PROJECT_NAME} test.cpp)
+add_executable(${PROJECT_NAME} test.cpp Dbase.cpp)
 # add_executable has to come before target_link_libraries and target_include_directories
 
 # note that for what we're doing doesn't matter whether PUBLIC or PRIVATE (see CMAKE docs)
