@@ -22,34 +22,25 @@ int main() {
 const pstreams::pmode mode = pstreams::pstdout|pstreams::pstdin;
 pstream clangd("clangd --log=error", mode); //verbose or error or info
 
-  std::thread t0([&]() {  
-int pid = ::getpid();
-s = R"({"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {"processId": 0, "rootPath": null, "rootUri": "file:///home/slzatz/pylspclient/", "initializationOptions": null, "capabilities": {"offsetEncoding": ["utf-8"], "textDocument": {"codeAction": {"dynamicRegistration": true}, "codeLens": {"dynamicRegistration": true}, "colorProvider": {"dynamicRegistration": true}, "completion": {"completionItem": {"commitCharactersSupport": true, "documentationFormat": ["markdown", "plaintext"], "snippetSupport": true}, "completionItemKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]}, "contextSupport": true, "dynamicRegistration": true}, "definition": {"dynamicRegistration": true}, "documentHighlight": {"dynamicRegistration": true}, "documentLink": {"dynamicRegistration": true}, "documentSymbol": {"dynamicRegistration": true, "symbolKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]}}, "formatting": {"dynamicRegistration": true}, "hover": {"contentFormat": ["markdown", "plaintext"], "dynamicRegistration": true}, "implementation": {"dynamicRegistration": true}, "onTypeFormatting": {"dynamicRegistration": true}, "publishDiagnostics": {"relatedInformation": true}, "rangeFormatting": {"dynamicRegistration": true}, "references": {"dynamicRegistration": true}, "rename": {"dynamicRegistration": true}, "signatureHelp": {"dynamicRegistration": true, "signatureInformation": {"documentationFormat": ["markdown", "plaintext"]}}, "synchronization": {"didSave": true, "dynamicRegistration": true, "willSave": true, "willSaveWaitUntil": true}, "typeDefinition": {"dynamicRegistration": true}}, "workspace": {"applyEdit": true, "configuration": true, "didChangeConfiguration": {"dynamicRegistration": true}, "didChangeWatchedFiles": {"dynamicRegistration": true}, "executeCommand": {"dynamicRegistration": true}, "symbol": {"dynamicRegistration": true, "symbolKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]}}, "workspaceEdit": {"documentChanges": true}, "workspaceFolders": true}}, "trace": "off", "workspaceFolders": [{"name": "python-lsp", "uri": "file:///home/slzatz/pylspclient/"}]}})";
+std::thread t0([&]() {  
+  int pid = ::getpid();
 
-js = json::parse(s);
-js["params"]["processId"] = pid + 1;
-s = js.dump();
+  s = R"({"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {"processId": 0, "rootPath": null, "rootUri": "file:///home/slzatz/pylspclient/", "initializationOptions": null, "capabilities": {"offsetEncoding": ["utf-8"], "textDocument": {"codeAction": {"dynamicRegistration": true}, "codeLens": {"dynamicRegistration": true}, "colorProvider": {"dynamicRegistration": true}, "completion": {"completionItem": {"commitCharactersSupport": true, "documentationFormat": ["markdown", "plaintext"], "snippetSupport": true}, "completionItemKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]}, "contextSupport": true, "dynamicRegistration": true}, "definition": {"dynamicRegistration": true}, "documentHighlight": {"dynamicRegistration": true}, "documentLink": {"dynamicRegistration": true}, "documentSymbol": {"dynamicRegistration": true, "symbolKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]}}, "formatting": {"dynamicRegistration": true}, "hover": {"contentFormat": ["markdown", "plaintext"], "dynamicRegistration": true}, "implementation": {"dynamicRegistration": true}, "onTypeFormatting": {"dynamicRegistration": true}, "publishDiagnostics": {"relatedInformation": true}, "rangeFormatting": {"dynamicRegistration": true}, "references": {"dynamicRegistration": true}, "rename": {"dynamicRegistration": true}, "signatureHelp": {"dynamicRegistration": true, "signatureInformation": {"documentationFormat": ["markdown", "plaintext"]}}, "synchronization": {"didSave": true, "dynamicRegistration": true, "willSave": true, "willSaveWaitUntil": true}, "typeDefinition": {"dynamicRegistration": true}}, "workspace": {"applyEdit": true, "configuration": true, "didChangeConfiguration": {"dynamicRegistration": true}, "didChangeWatchedFiles": {"dynamicRegistration": true}, "executeCommand": {"dynamicRegistration": true}, "symbol": {"dynamicRegistration": true, "symbolKind": {"valueSet": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]}}, "workspaceEdit": {"documentChanges": true}, "workspaceFolders": true}}, "trace": "off", "workspaceFolders": [{"name": "python-lsp", "uri": "file:///home/slzatz/pylspclient/"}]}})";
 
-header = fmt::format("Content-Length: {}\r\n\r\n", s.size());
-s = header + s;
-fmt::print("\nsending initialization message to clangd:\n{}\n", s);
-clangd.write(s.c_str(), s.size()).flush();
+  js = json::parse(s);
+  js["params"]["processId"] = pid + 1;
+  s = js.dump();
+
+  header = fmt::format("Content-Length: {}\r\n\r\n", s.size());
+  s = header + s;
+  fmt::print("\nsending initialization message to clangd:\n{}\n", s);
+  clangd.write(s.c_str(), s.size()).flush();
 
 
 //initialization from client produces a capabilities response
 //from the server which is read below
-//the server response begins Content-Length: 828 + json response
-/*
-std::string str;
-std::cout << '\n';
-std::getline(clangd, str);
-std::cout << "getline: " << str << '\n';
-std::getline(clangd, str);
-std::cout << "getline: " << str << '\n';
-*/
 readsome(clangd, 1); //this could block
 
-//std::this_thread::sleep_for((std::chrono::seconds(2)));
 //Client sends initialized response
 s = R"({"jsonrpc": "2.0", "method": "initialized", "params": {}})";
 header = fmt::format("Content-Length: {}\r\n\r\n", s.size());
@@ -57,44 +48,22 @@ s = header + s;
 fmt::print("\nsending initialized message to clangd:\n{}\n", s);
 clangd.write(s.c_str(), s.size()).flush();
 
-//std::this_thread::sleep_for((std::chrono::seconds(2)));
-
-//readsome(clangd, 2); //doesn't read anything so could be eliminated
-
-//std::this_thread::sleep_for((std::chrono::seconds(1)));
-
 //client sends didOpen notification
 s = R"({"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": {"textDocument": {"uri": "file:///home/slzatz/pylspclient/test.cpp", "languageId": "cpp", "version": 1, "text": ""}}})";
 js = json::parse(s);
 js["params"]["textDocument"]["text"] = " "; //text ? if it escapes automatically
 s = js.dump();
-
-s = R"({"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": {"textDocument": {"uri": "file:///home/slzatz/pylspclient/test.cpp", "languageId": "cpp", "version": 1, "text": "#include \"pstream.h\"\n#include <iostream>\n#include <thread>\n#include <chrono>\n#include <time.h>\n#include <fmt/core.h>\n#include <string>\n\nusing namespace redi;\n\nint main() {\n\n\nconst pstreams::pmode mode = pstreams::pstdout|pstreams::pstdin;\npstream child(\"python python_server.py\", mode);\nchar buf[1024];\nstd::streamsize n;\nint i = 0;\ntime_t t0 = time(NULL);\nwhile (1) {\n\n  if (i%5 == 0) {\n  auto t = time(NULL) - t0;\n  std::cout << \"writing to child: \" << t << '\\n';\n  std::string s = fmt::format(\"hello: {} - {}\\n\", i,t); \n  // flush below important to not buffering\n  // and therefore delaying the child's read\n  child.write(s.c_str(), s.size()).flush();\n }\n\n  std::cout << \"this is what server got\" << '\\n';\n  while ((n = child.out().readsome(buf, sizeof(buf))) > 0)\n     std::cout.write(buf, n).flush();\n\n  i += 1;\n\n  std::this_thread::sleep_for((std::chrono::seconds(5)));\n}\n\nreturn 0;\n}"}}})";
 header = fmt::format("Content-Length: {}\r\n\r\n", s.size());
 s = header + s;
 fmt::print("\nsending didOpen message to clangd:\n{}\n", s);
 clangd.write(s.c_str(), s.size()).flush();
 
-//std::this_thread::sleep_for((std::chrono::seconds(2)));
-//client receives a diagnostics response from its didOpen notification
-/*
-std::cout << '\n';
-std::getline(clangd, str);
-std::cout << "getline: " << str << '\n';
-std::getline(clangd, str);
-std::cout << "getline: " << str << '\n';
-*/
-//clangd >> str;
-//std::cout << "clangd >> str: " << str << '\n';
-readsome(clangd, 3);//sometimes too soon and sometimes not this could block
+readsome(clangd, 3); //contains original diagnostics
 //reads initial diagnostics
 });
 
 //need this delay
-std::this_thread::sleep_for((std::chrono::seconds(20)));
-//t0.join();
-//char x;
-////std::cin >> x;
+std::this_thread::sleep_for((std::chrono::seconds(2)));
 
 // may not need the second thread
 std::atomic<bool> code_changed = false;
@@ -131,28 +100,15 @@ while (active) {
   }
   std::this_thread::sleep_for((std::chrono::seconds(1)));
 }
-
-//below doesn't work because escapes \n with \\n
-//std::string text = R"(#include <iostream>\nint main() {\n std::cout << "Hello World" << std::endl\n})";
-std::string text = "#include <iostream>\nint main() {\n std::cout << \"Hello World\" << std::endl\n}";
-//didChange
-s = R"({"jsonrpc": "2.0", "method": "textDocument/didChange", "params": {"textDocument": {"uri": "file:///home/slzatz/pylspclient/test.cpp", "version": 2}, "contentChanges": [{"text": ""}]}})";
-
-/*
-js = json::parse(s);
-js["params"]["contentChanges"][0]["text"] = text; //text ? if it escapes automatically
-js["params"]["textDocument"]["version"] = 2; //text ? if it escapes automatically
-s = js.dump();
-header = fmt::format("Content-Length: {}\r\n\r\n", s.size());
-s = header + s;
-fmt::print("\nsending didChange message to clangd:\n{}\n", s);
-clangd.write(s.c_str(), s.size()).flush();
-*/
-//seems like you could block since every didChange should
-//get a textDocument/publishDiagnostics response
+std::string exit = R"({"jsonrpc": "2.0", "id": 1, "method": "shutdown", "params": {}})";
+clangd.write(exit.c_str(), exit.size()).flush();
+std::this_thread::sleep_for((std::chrono::seconds(1)));
+exit = R"({"jsonrpc": "2.0", "method": "exit", "params": {}})";
+clangd.write(exit.c_str(), exit.size()).flush();
 
 });
 
+// this is simulated listmanager
 std::this_thread::sleep_for((std::chrono::seconds(5)));
 code_changed = true;
 code = "#include <iostream>\nint main() {\n std::cout << \"Hello World\" << std::endl\n}";
@@ -182,10 +138,10 @@ void readsome(pstream &p, int i) {
   std::string header{};
   std::cout << '\n';
   std::getline(p, header);
-  str = header;
+  //str = header;
   std::cout << "getline: " << str << '\n';
   std::getline(p, header);
-  str += header;
+  //str += header;
   std::cout << "getline: " << str << '\n';
   //char buf[1024];
   //std::streamsize n;
@@ -197,11 +153,18 @@ void readsome(pstream &p, int i) {
   }
   // should always be non-empty
   if (str.size()) do_something(str);
-  buf[0] = '\0';
+  //buf[0] = '\0';
   fmt::print("\nend read {}\n", i);
 }
 
 void do_something(std::string s) {
   //std::string_view sv{buf};
-  std::cout << "\n\ndo_something: " << s.substr(0, 20);
+  json js = json::parse(s);
+  if (js.contains("method")) {
+    if (js["method"] == "textDocument/publishDiagnostics") {
+      json diagnostics = js["params"]["diagnostics"][0];
+      std::cout << "\n\ndiagnostics:\n" << diagnostics.dump(2);
+    }
+  }
+  //std::cout << "\n\ndo_something: " << s.substr(0, 20);
 }

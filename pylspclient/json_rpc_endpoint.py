@@ -58,7 +58,7 @@ class JsonRpcEndpoint(object):
 
     def recv_response(self):
         '''        
-        Recives a message.
+        Receives a message.
 
         :return: a message
         '''

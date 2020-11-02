@@ -2,6 +2,7 @@
 # The output executable is listmanager_cpp
 
 cmake_minimum_required(VERSION 3.18)
+#project(clangd_thread_one)
 project(test_cpp)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -15,6 +16,7 @@ if(NOT ZeroMQ_FOUND)
   find_package(ZeroMQ REQUIRED)
 endif()
 
+find_package(spdlog REQUIRED)
 find_package(SQLite3 REQUIRED)
 find_package(PythonLibs REQUIRED)
 find_package(PostgreSQL REQUIRED)
@@ -57,6 +59,7 @@ set (source_dir "${PROJECT_SOURCE_DIR}/")
 #file (GLOB source_files "${source_dir}/listmanager_term_improved.*")
 
 add_executable(${PROJECT_NAME} test.cpp Dbase.cpp)
+#add_executable(${PROJECT_NAME} clangd_thread_one.cpp)
 # add_executable has to come before target_link_libraries and target_include_directories
 
 # note that for what we're doing doesn't matter whether PUBLIC or PRIVATE (see CMAKE docs)
@@ -67,10 +70,10 @@ target_include_directories(${PROJECT_NAME}
                            PUBLIC ${PostgreSQL_INCLUDE_DIRS}
                            PUBLIC ${ZeroMQ_INCLUDE_DIR})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${SQLITE3_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${PYTHON_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${PostgreSQL_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${ZeroMQ_INCLUDE_DIR})
+#target_include_directories(${PROJECT_NAME} PUBLIC ${SQLITE3_INCLUDE_DIRS})
+#target_include_directories(${PROJECT_NAME} PUBLIC ${PYTHON_INCLUDE_DIRS})
+#target_include_directories(${PROJECT_NAME} PUBLIC ${PostgreSQL_INCLUDE_DIRS})
+#target_include_directories(${PROJECT_NAME} PUBLIC ${ZeroMQ_INCLUDE_DIR})
 
 # case is important in names like SQLite3_LIBRARIES
 target_link_libraries(${PROJECT_NAME}
@@ -83,5 +86,6 @@ target_link_libraries(${PROJECT_NAME}
                       markdown
                       fmt::fmt
                       cpr::cpr
+                      spdlog::spdlog
                       nlohmann_json::nlohmann_json) 
 
